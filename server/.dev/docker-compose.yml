@@ -1,0 +1,39 @@
+version: "3.3"
+
+services:
+  talsend-backoffice:
+    build:
+      context: .
+    container_name: talsend-backoffice
+    environment:
+      - DOPPLER_TOKEN
+      - DOPPLER_CONFIG
+      - DOPPLER_PROJECT
+      - TALSEND_DB_HOST
+      - TALSEND_DB_PORT
+      - TALSEND_DB_NAME
+      - TALSEND_DB_USERNAME
+      - TALSEND_DB_PASSWORD
+      - TALSEND_BACKOFFICE_PASSWORD
+      - TALSEND_BACKOFFICE_EMAIL
+    ports:
+      - 1337:1337
+    depends_on:
+      - talsend-db
+    volumes:
+      - "../:/app/"
+
+  talsend-db:
+    image: postgres:12
+    container_name: talsend-db
+    environment:
+      POSTGRES_DB: ${TALSEND_DB_NAME}
+      POSTGRES_USER: ${TALSEND_DB_USERNAME}
+      POSTGRES_PASSWORD: ${TALSEND_DB_PASSWORD}
+    volumes:
+      - talsend-data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+
+volumes:
+  talsend-data:
